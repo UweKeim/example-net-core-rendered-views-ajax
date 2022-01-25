@@ -6,3 +6,5 @@ This is an example ASP.NET Core MVC 6 project that showcases:
 - Loading such a rendered Partial View from an AJAX call.
 - Nested rendered Partial View being loaded from AJAX calls.
 - Rendering HTML forms with jQuery Unobtrusive Ajax.
+
+[Click here for a running instance of the example appliction](https://www.magerquark.de/example-net-core-rendered-views-ajax).
