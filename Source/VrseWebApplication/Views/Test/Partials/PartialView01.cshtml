@@ -1,0 +1,46 @@
+﻿@model int
+
+<script>
+	function PartialView01Func1(a) {
+		console.log(`Partial View 01: PartialView01Func1('${a}').`);
+	}
+
+	$(function() {
+		console.log("Partial View 01: Document ready.");
+		PartialView01Func1("p1");
+		View01Func1("p1");
+
+		showLoadingPanel($('body'), 1);
+		sleep(1000);
+
+		$.ajax({
+			type: "POST",
+			url: "@Url.Action(@"GetPartialView02", @"Test", new { id = 2 })",
+			data: { "id": 2 },
+			success: function(response) {
+				sleep(1000);
+				hideLoadingPanel();
+
+				if (response.error) {
+					handleError(response.error);
+				} else {
+					// Partial anzeigen.
+					const cont = $('#partial-view-02-container');
+					cont.html(response.html);
+					renderFormGroupsInContainer(cont);
+				}
+			},
+			error: function(response) {
+				sleep(1000);
+				hideLoadingPanel();
+				handleError(response.responseText);
+			}
+		});
+	});
+</script>
+
+<h3>Partial View 01</h3>
+
+<p>Inhalt der Partial View 01. Übergebene ID: <strong>@Model</strong>.</p>
+
+<div id="partial-view-02-container" class="mt-3"></div>

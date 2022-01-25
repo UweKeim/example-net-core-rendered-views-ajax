@@ -1,0 +1,17 @@
+﻿@model int
+
+<script>
+	function PartialView04Func1(a) {
+		console.log(`Partial View 04: PartialView04Func1('${a}').`);
+	}
+
+	$(function() {
+		console.log("Partial View 04: Document ready.");
+		PartialView04Func1("p4");
+		View02Func1("p4");
+	});
+</script>
+
+<h3>Partial View 04</h3>
+
+<p>Inhalt der Partial View 04. Übergebene ID: <strong>@Model</strong>.</p>

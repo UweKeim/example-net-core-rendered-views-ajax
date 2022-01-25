@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - View Render Service Example</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/VrseWebApplication.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/lib/sweetalert2/sweetalert2.min.css" asp-append-version="true" />
+
+	<script src="~/lib/darkreader/darkreader.js"></script>
+
+	<script>
+		DarkReader.setFetchMethod(window.fetch);
+
+		// Enable when the system color scheme is dark.
+		DarkReader.auto({
+			brightness: 100,
+			contrast: 90,
+			sepia: 10
+		});
+	</script>
+
+	<script>
+		var loadingPanelClosed = true;
+
+		function handleError(message) {
+			ClientLogging.Log(LogType.Error, message);
+			if (!!message) {
+					// https://sweetalert2.github.io/#configuration
+					Swal.fire({
+						title: "Something went wrong",
+						text: message,
+						showCancelButton: true,
+						cancelButtonText: "Close",
+						focusCancel: true,
+						showConfirmButton: false,
+						heightAuto: false,
+						allowEscapeKey: true,
+						allowEnterKey: true
+					});
+			}
+		}
+
+		function showLoadingPanel($container, delay) {
+			if (delay === void 0) {
+				delay = 500;
+			}
+			loadingPanelClosed = false;
+			setTimeout(function() {
+					if (!loadingPanelClosed) {
+						const $loadingPanel = $("#loading-panel");
+						const pos = $container.position() || { top: 0, left: 0 };
+						let height = $container.outerHeight(true);
+						if (height === 0) {
+							$container.css("min-height", "150px");
+							height = 150;
+						}
+						$loadingPanel.css("top", pos.top + "px");
+						$loadingPanel.css("left", pos.left + "px");
+						$loadingPanel.width($container.outerWidth(true));
+						$loadingPanel.height(height);
+						$loadingPanel.addClass("show");
+					}
+				},
+				delay);
+		}
+
+		function hideLoadingPanel() {
+			loadingPanelClosed = true;
+			const $loadingPanel = $("#loading-panel");
+			$loadingPanel.removeClass("show");
+			$loadingPanel.css("top", 0);
+			$loadingPanel.css("left", 0);
+			$loadingPanel.width(0);
+			$loadingPanel.height(0);
+		}
+
+		function sleep(milliseconds) {
+			const now = new Date().getTime();
+			while (new Date().getTime() < now + milliseconds) {
+				/* Do nothing */
+			}
+		};
+
+		function renderFormGroupsInContainer($container) {
+			//Client-Validation
+			if ($.validator !== undefined && $.validator.unobtrusive !== undefined) {
+				$.validator.unobtrusive.parse($container);
+			}
+			//Bootstrap - Popover initialisieren
+			$("[data-toggle='popover']").popover();
+		}
+	</script>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">View Render Service Example</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" href="https://github.com/UweKeim/example-net-core-rendered-views-ajax">GitHub project</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+<div class="container">
+	<main role="main" class="pb-3">
+		@RenderBody()
+	</main>
+</div>
+
+<div id="loading-panel">
+	<div class="loading-panel-inner">
+		<div class="loading-panel-overlay"></div>
+			<img src="~/images/loading.svg" alt="" asp-append-version="true"/>
+		<div class="loading-panel-text">Loading…</div>
+	</div>
+</div>
+
+<footer class="border-top footer text-muted mt-5 mb-2">
+		<div class="container mt-2">
+			<a href="https://github.com/UweKeim/example-net-core-rendered-views-ajax">GitHub project</a>
+		</div>
+	</footer>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

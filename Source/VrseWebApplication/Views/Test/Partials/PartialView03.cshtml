@@ -1,0 +1,91 @@
+﻿@model VrseWebApplication.Models.TestPartial03ViewModel
+
+<script>
+	function PartialView03Func1(a) {
+		console.log(`Partial View 03: PartialView03Func1('${a}').`);
+	}
+
+	$(function() {
+		console.log("Partial View 03: Document ready.");
+		PartialView03Func1("p3");
+		View02Func1("p3");
+	});
+
+	function sendForm_begin() {
+		console.log("Partial View 03: sendForm_begin.");
+
+		showLoadingPanel($('body'), 1);
+		sleep(1000);
+	}
+
+	function sendForm_complete() {
+		console.log("Partial View 03: sendForm_complete.");
+
+		sleep(1000);
+		hideLoadingPanel();
+	}
+
+	function sendForm_success(data) {
+		console.log("Partial View 03: sendForm_success.");
+
+		sleep(1000);
+		hideLoadingPanel();
+
+		if (data.error) {
+			// Im Fehlerfall, Partial in meinem Container anzeigen.
+			const cont = $('#partial-view-03-container');
+			cont.html(data.html);
+			renderFormGroupsInContainer(cont);
+		} else {
+			// Erfolg, Partial in anderem Container anzeigen.
+			const cont = $('#partial-view-04-container');
+			cont.html(data.html);
+			renderFormGroupsInContainer(cont);
+		}
+	}
+</script>
+
+<h3>Partial View 03</h3>
+
+<p>Inhalt der Partial View 03. Übergebene ID: <strong>@Model?.Id</strong>.</p>
+
+@* https://dotnetthoughts.net/jquery-unobtrusive-ajax-helpers-in-aspnet-core/ *@
+<form id="formPartial03"
+      asp-antiforgery="true"
+      asp-controller="Test"
+      asp-action="PostPartialView03"
+      data-ajax="true"
+      data-ajax-method="post"
+      data-ajax-begin="sendForm_begin"
+      data-ajax-complete="sendForm_complete"
+      data-ajax-success="sendForm_success"
+      data-ajax-failure="sendForm_failure"
+      autocomplete="off">
+	
+	@Html.ValidationSummary()
+
+	<div class="form-panel">
+		<div class="form-fields-area">
+			<div class="row">
+				<div class="col-12">
+					@Html.LabelFor(m => m.Id, new { @class = @"form-label" })
+				</div>
+				<div class="col-12">
+					@Html.TextBoxFor(m => m.Id, new { @class = @"form-control w-100" })
+					@Html.ValidationMessageFor(m => m.Id)
+				</div>
+			</div>
+
+			<div class="form-button-area">
+				<hr/>
+				<div class="row">
+					<div class="col-12">
+						<button type="submit" class="btn btn-primary">Speichern</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<div id="partial-view-04-container" class="mt-3"></div>

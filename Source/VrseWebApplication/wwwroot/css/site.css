@@ -1,0 +1,61 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Loading-Panel */
+#loading-panel {
+    position: absolute;
+    display: none;
+}
+
+#loading-panel.show {
+    display: block;
+}
+
+#loading-panel .loading-panel-inner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+#loading-panel .loading-panel-inner .loading-panel-overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    opacity: 0.7;
+    z-index: 2000;
+}
+
+#loading-panel .loading-panel-inner img {
+    position: absolute;
+    top: calc(50% - (100px + 2.5rem) / 2);
+    left: calc(50% - 50px);
+    width: 100px;
+    z-index: 2001;
+}
+
+#loading-panel .loading-panel-inner .loading-panel-text {
+    position: absolute;
+    top: calc(50% - (100px + 2.5rem) / 2 + 100px + 0.5rem);
+    width: 100%;
+    font-size: 1.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+    z-index: 2001;
+}
