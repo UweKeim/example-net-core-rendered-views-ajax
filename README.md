@@ -9,4 +9,4 @@ This is an example ASP.NET Core MVC 6 project that showcases:
 
 ### Live running example
 
-[Click here for a running instance of the example appliction](https://www.magerquark.de/example-net-core-rendered-views-ajax).
+[Click here for a running instance of the example application](https://www.magerquark.de/example-net-core-rendered-views-ajax).
