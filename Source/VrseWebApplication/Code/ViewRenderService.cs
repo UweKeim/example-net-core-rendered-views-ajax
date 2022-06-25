@@ -1,23 +1,21 @@
 ﻿namespace VrseWebApplication.Code;
 
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System.Text;
 
 public interface IViewRenderService
 {
     /// <summary>
-    /// <para>Calling this method is always useful if JSON from an action is to be returned in addition to
-    /// the actual HTML of a partial. The return value of this method call can then be returned as an "html" 
-    /// property in JSON, for example.</para>
+    /// <para>Ein Aufruf dieser Methode ist immer dann sinnvoll, wenn neben dem eigentlichen HTML eines Partials noch
+    /// JSON aus einer Action zurück gegeben werden soll. Der Rückgabewert dieses Methodenaufrufs kann dann z. B.
+    /// als eine "html"-Property im JSON zurück gegeben werden.</para>
     /// 
-    /// <para>If only the HTML of a partial is to be returned, i.e. no additional JSON, then a 
-    /// "return PartialView(...)" from the action is sufficient and this method is not needed.</para>
+    /// <para>Wenn ausschließlich das HTML eines Partials zurück gegeben werden soll, also kein zusätzliches JSON,
+    /// dann reicht ein "return PartialView(...)" aus der Action heraus aus, und diese Methode wird nicht benötigt.</para>
     /// </summary>
     Task<string> RenderPartialView(
         ControllerBase controller,
@@ -53,6 +51,12 @@ public sealed class ViewRenderService : IViewRenderService
 
         await using var sw = new StringWriter();
         var viewResult = _razorViewEngine.FindView(actionContext, viewPath, false);
+        if (!viewResult.Success)
+        {
+            // https://stackoverflow.com/questions/62900334/irazorviewengine-findview-with-getview-cant-find-view
+            viewResult = _razorViewEngine.GetView(executingFilePath: null, viewPath: viewPath, isMainPage: false);
+        }
+
         if (!viewResult.Success)
         {
             var msg = new StringBuilder();
