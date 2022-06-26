@@ -34,13 +34,11 @@
 		if (data.error) {
 			// Im Fehlerfall, Partial in meinem Container anzeigen.
 			const cont = $('#partial-view-03-container');
-			cont.html(data.html);
-			renderFormGroupsInContainer(cont);
+			fillHtmlIntoContainer(data.html, cont);
 		} else {
 			// Erfolg, Partial in anderem Container anzeigen.
 			const cont = $('#partial-view-04-container');
-			cont.html(data.html);
-			renderFormGroupsInContainer(cont);
+			fillHtmlIntoContainer(data.html, cont);
 		}
 	}
 </script>
@@ -88,4 +86,6 @@
 	</div>
 </form>
 
-<div id="partial-view-04-container" class="mt-3"></div>
+<div id="partial-view-04-container" class="mt-3">
+	Click <kbd>Send</kbd>.
+</div>

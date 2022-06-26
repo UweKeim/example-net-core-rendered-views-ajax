@@ -1,0 +1,20 @@
+﻿@model VrseWebApplication.Models.DxTestPartial03ViewModel
+
+@using (Html.DevExtreme().ValidationGroup())
+{
+	@Html.ValidationSummary()
+
+	<div class="form-panel">
+		<div class="form-fields-area">
+			<div class="row">
+				<div class="col-12">
+					@Html.LabelFor(m => m.Id, new { @class = @"form-label" })
+				</div>
+				<div class="col-12">
+					@Html.DevExtreme().TextBoxFor(m => m.Id).ElementAttr(new {@class=@"form-control w-100"})
+					@Html.ValidationMessageFor(m => m.Id)
+				</div>
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,150 @@
+﻿@model VrseWebApplication.Models.DxTestPartial03ViewModel
+
+@{
+	ViewData[@"Title"] = "DX Test 02 – Bootstrap Modal";
+}
+
+@section Scripts {
+	<script>
+		// --------------------------------
+
+		$(function() {
+			console.log("DX Test 02: Document ready.");
+		});
+
+		// --------------------------------
+		// Modal.
+
+		var didEverShowSendPopup = false;
+
+		function getSendModalInstance() {
+			const c = document.getElementById('sendModal');
+			return bootstrap.Modal.getOrCreateInstance(c);
+		}
+
+		function showSendModal() {
+			didEverShowSendPopup = true;
+			getSendModalInstance().show();
+		}
+
+		function hideSendModal() {
+			getSendModalInstance().hide();
+			hideLoadingPanel();
+		}
+
+		// --------------------------------
+		// AJAX form.
+
+		function sendForm_begin() {
+			console.log("DX View 02: sendForm_begin.");
+
+			showLoadingPanel($('body'), 1);
+		}
+
+		function sendForm_complete() {
+			console.log("DX View 02: sendForm_complete.");
+
+			hideLoadingPanel();
+		}
+
+		function sendForm_success(data) {
+			console.log("DX View 02: sendForm_success.");
+
+			hideLoadingPanel();
+
+			if (data.error) {
+				// Im Fehlerfall, Partial in meinem Container anzeigen.
+				const cont = $('#partial-view-03-container');
+				fillHtmlIntoContainer(data.html, cont);
+			} else {
+				hideSendModal();
+				handleSuccess(data.message);
+			}
+		}
+
+		function sendForm_failure(data) {
+			console.log("DX View 02: sendForm_failure.");
+
+		}
+
+		function DxView01Func1(a) {
+			console.log(`DX View 01: DxView01Func1('${a}').`);
+		}
+
+		// ---------------------------
+		// Fetch modal form content and show modal.
+
+		function startShowSendModal() {
+			showLoadingPanel($('body'), 1);
+
+			$.ajax({
+				type: "POST",
+				url: "@Url.Action(@"GetPartialView03", @"TestDevExtreme", new { id = 33 })",
+				data: { "id": 33 },
+				success: function(response) {
+					hideLoadingPanel();
+
+					if (response.error) {
+						handleError(response.error, false);
+					} else {
+						// Partial anzeigen.
+						const cont = $('#partial-view-03-container');
+						fillHtmlIntoContainer(response.html, cont);
+
+						showSendModal();
+					}
+				},
+				error: function(response) {
+					hideLoadingPanel();
+					handleError(response.responseText, false);
+				}
+			});
+		}
+
+	</script>
+}
+
+<h2>@ViewData[@"Title"]</h2>
+
+<div class="row mt-4">
+	<div class="col-12">
+		<a href="javascript:void(0)" class="btn btn-outline-primary" onclick="startShowSendModal()">Show modal</a>
+	</div>
+</div>
+
+@* https://dotnetthoughts.net/jquery-unobtrusive-ajax-helpers-in-aspnet-core/ *@
+<form id="sendModalForm"
+      asp-antiforgery="true"
+      asp-controller="TestDevExtreme"
+      asp-action="DxPostPartialView03"
+      data-ajax="true"
+      data-ajax-method="post"
+      data-ajax-begin="sendForm_begin"
+      data-ajax-complete="sendForm_complete"
+      data-ajax-success="sendForm_success"
+      data-ajax-failure="sendForm_failure"
+      autocomplete="off">
+	  
+	<div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="sendModalTitle">DX Test Modal</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+				</div>
+			
+				<div class="modal-body mb-3" id="sendModalBody">
+
+					<div id="partial-view-03-container" class="mt-3">
+					</div>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Send</button>
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

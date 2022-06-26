@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - View Render Service Example</title>
+	<title>@ViewData["Title"] – View Render Service Example</title>
 	
 	<link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico">
 
@@ -37,11 +37,29 @@
 		var loadingPanelClosed = true;
 
 		function handleError(message) {
-			console.log(message);
+			console.error(message);
 			if (!!message) {
 					// https://sweetalert2.github.io/#configuration
 					Swal.fire({
 						title: "Something went wrong",
+						text: message,
+						showCancelButton: true,
+						cancelButtonText: "Close",
+						focusCancel: true,
+						showConfirmButton: false,
+						heightAuto: false,
+						allowEscapeKey: true,
+						allowEnterKey: true
+					});
+			}
+		}
+
+		function handleSuccess(message) {
+			console.log(message);
+			if (!!message) {
+					// https://sweetalert2.github.io/#configuration
+					Swal.fire({
+						title: "Success",
 						text: message,
 						showCancelButton: true,
 						cancelButtonText: "Close",
@@ -103,6 +121,11 @@
 			//Bootstrap - Popover initialisieren
 			$("[data-toggle='popover']").popover();
 		}
+
+		function fillHtmlIntoContainer(html, $container) {
+			$container.html(html);
+			renderFormGroupsInContainer($container);
+		}
 	</script>
 </head>
 <body>
@@ -128,7 +151,7 @@
 		</nav>
 	</header>
 <div class="container">
-	<main role="main" class="pb-3">
+	<main role="main" class="pb-3 pt-4">
 		@RenderBody()
 	</main>
 </div>

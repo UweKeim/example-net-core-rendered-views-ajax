@@ -63,3 +63,11 @@ body {
 .validation-summary-errors, .field-validation-error {
     color: red;
 }
+
+footer a, body a {
+    text-decoration: none;
+}
+
+footer a:hover, body a:hover {
+    text-decoration: underline;
+}
