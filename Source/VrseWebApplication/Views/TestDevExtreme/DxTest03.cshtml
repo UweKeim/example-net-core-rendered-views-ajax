@@ -14,6 +14,8 @@
 
 		$(function() {
 			console.log("DX Test 03: Document ready.");
+
+			DevExpress.ui.dxOverlay.baseZIndex(2000);
 		});
 
 		// --------------------------------
@@ -139,7 +141,7 @@
 												@* https://demos.devexpress.com/ASPNetCore/Demo/DropDownBox/SingleSelection/ *@
 												@(Html.DevExtreme().DropDownBoxFor(m => m.Id)
 													//.DeferRendering(false)
-													.DropDownOptions(o => o.Container(@"sendModal")) // Notwendig wenn in Modal. https://supportcenter.devexpress.com/ticket/details/t678794
+													.DropDownOptions(o => o.Height(350).Container(@"sendModal")) // Notwendig wenn in Modal. https://supportcenter.devexpress.com/ticket/details/t678794
 													.ID(@"idSelectControl")
 													.DisplayExpr(new JS(@"idSelect_displayExpr"))
 													.DataSource(d => d.Mvc()
