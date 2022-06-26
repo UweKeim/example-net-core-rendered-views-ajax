@@ -41,7 +41,7 @@
 									.Controller(nameof(DataController).Cn())
 									.LoadAction(nameof(DataController.LoadAllData01))
 									.LoadMode(DataSourceLoadMode.Raw)
-									.Key(@"id"))
+									.Key(nameof(Data01Model.Id).ToLowerInvariant()))
 								.Placeholder("Select data")
 								.OnValueChanged(@"idSelect_valueChanged")
 								.ContentTemplate(new TemplateName(@"EmbeddedIdSelect")))
