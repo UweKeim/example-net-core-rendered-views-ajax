@@ -1,14 +1,14 @@
 ﻿@model VrseWebApplication.Models.DxTestPartial01ViewModel
 
 <script>
-	function PartialView03Func1(a) {
-		console.log(`DX Partial View 01: PartialView03Func1('${a}').`);
+	function DxPartialView01Func1(a) {
+		console.log(`DX Partial View 01: DxPartialView01Func1('${a}').`);
 	}
 
 	$(function() {
 		console.log("DX Partial View 01: Document ready.");
-		PartialView03Func1("p3");
-		View02Func1("p3");
+		DxPartialView01Func1("dx-p1");
+		DxView01Func1("dx-p1");
 	});
 
 	function sendForm_begin() {
@@ -33,12 +33,12 @@
 
 		if (data.error) {
 			// Im Fehlerfall, Partial in meinem Container anzeigen.
-			const cont = $('#partial-view-03-container');
+			const cont = $('#partial-view-01-container');
 			cont.html(data.html);
 			renderFormGroupsInContainer(cont);
 		} else {
 			// Erfolg, Partial in anderem Container anzeigen.
-			const cont = $('#partial-view-04-container');
+			const cont = $('#partial-view-02-container');
 			cont.html(data.html);
 			renderFormGroupsInContainer(cont);
 		}
@@ -50,7 +50,7 @@
 <p>Content of the DX Partial View 01. Passed ID: <strong>@Model?.Id</strong>.</p>
 
 @* https://dotnetthoughts.net/jquery-unobtrusive-ajax-helpers-in-aspnet-core/ *@
-<form id="formPartial03"
+<form id="formPartial01"
       asp-antiforgery="true"
       asp-controller="TestDevExtreme"
       asp-action="DxPostPartialView01"
@@ -73,7 +73,7 @@
 					@Html.LabelFor(m => m.Id, new { @class = @"form-label" })
 				</div>
 				<div class="col-12">
-					@Html.TextBoxFor(m => m.Id, new { @class = @"form-control w-100" })
+					@Html.DevExtreme().TextBoxFor(m => m.Id).ElementAttr(new {@class=@"form-control w-100"})
 					@Html.ValidationMessageFor(m => m.Id)
 				</div>
 			</div>
@@ -91,4 +91,4 @@
 }
 </form>
 
-<div id="partial-view-04-container" class="mt-3"></div>
+<div id="partial-view-02-container" class="mt-3"></div>
