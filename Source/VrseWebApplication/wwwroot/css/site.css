@@ -64,10 +64,10 @@ body {
     color: red;
 }
 
-footer a, body a {
+footer a, body a:not(.btn) {
     text-decoration: none;
 }
 
-footer a:hover, body a:hover {
-    text-decoration: underline;
-}
+    footer a:hover, body a:not(.btn):hover {
+        text-decoration: underline;
+    }

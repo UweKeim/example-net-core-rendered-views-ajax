@@ -28,6 +28,12 @@ public sealed class TestDevExtremeController : Controller
         return View();
     }
 
+    [HttpGet]
+    public IActionResult DxTest03()
+    {
+        return View();
+    }
+
     [HttpPost]
     public async Task<IActionResult> GetPartialView01(int id)
     {
@@ -91,6 +97,39 @@ public sealed class TestDevExtremeController : Controller
                     error = true,
                     successful = false,
                     html = await _viewRenderer.RenderPartialView(this, @"Partials/DxPartialView03", model, ViewData)
+                });
+        }
+
+        return Json(
+            new
+            {
+                error = false,
+                successful = true,
+                message = $"Received ID {model.Id}",
+                id = model.Id
+            });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DxPostView03(DxTestPartial03ViewModel model)
+    {
+        await Task.CompletedTask;
+
+        if (model.Id <= 0)
+        {
+            ModelState.AddModelError(string.Empty, "Value must be greater than zero.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            var allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+            return Json(
+                new
+                {
+                    error = true,
+                    successful = false,
+                    message = string.Join(@"<br/>", allErrors.Select(e => e.ErrorMessage))
                 });
         }
 

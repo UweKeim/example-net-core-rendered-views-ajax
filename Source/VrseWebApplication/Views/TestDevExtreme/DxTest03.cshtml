@@ -1,0 +1,199 @@
+﻿@using VrseWebApplication.Controllers
+@using VrseWebApplication.Models
+@using VrseWebApplication.Code
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model VrseWebApplication.Models.DxTestPartial03ViewModel
+
+@{
+	ViewData[@"Title"] = "DX Test 03 – Most simple Bootstrap Modal";
+}
+
+@section Scripts {
+	<script>
+		// --------------------------------
+
+		$(function() {
+			console.log("DX Test 03: Document ready.");
+		});
+
+		// --------------------------------
+		// Modal.
+
+		var didEverShowSendPopup = false;
+
+		function getSendModalInstance() {
+			const c = document.getElementById('sendModal');
+			return bootstrap.Modal.getOrCreateInstance(c);
+		}
+
+		function showSendModal() {
+			didEverShowSendPopup = true;
+			getSendModalInstance().show();
+		}
+
+		function hideSendModal() {
+			getSendModalInstance().hide();
+			hideLoadingPanel();
+		}
+
+		// --------------------------------
+		// AJAX form.
+
+		function sendForm_begin() {
+			console.log("DX View 03: sendForm_begin.");
+
+			showLoadingPanel($('body'), 1);
+		}
+
+		function sendForm_complete() {
+			console.log("DX View 03: sendForm_complete.");
+			hideLoadingPanel();
+		}
+
+		function sendForm_success(data) {
+			console.log("DX View 03: sendForm_success.");
+
+			hideSendModal();
+
+			if (data.error) {
+				handleError(data.message);
+			} else {
+				hideSendModal();
+				handleSuccess(data.message);
+			}
+		}
+
+		function sendForm_failure(data) {
+			console.log("DX View 03: sendForm_failure.");
+		}
+
+		function DxView01Func1(a) {
+			console.log(`DX View 01: DxView01Func1('${a}').`);
+		}
+
+		// ---------------------------
+		// Fetch modal form content and show modal.
+
+		function startShowSendModal() {
+			showSendModal();
+		}
+
+		function idSelect_valueChanged(e) {
+			const $dataGrid = $("#embedded-idselect-grid");
+
+			if ($dataGrid.length) {
+				const dataGrid = $dataGrid.dxDataGrid("instance");
+				dataGrid.selectRows(e.value, false);
+			}
+		}
+
+		function idSelect_displayExpr(item) {
+			return item && `${item.@nameof(Data01Model.Name)}`;
+		}
+	</script>
+}
+
+<h2>@ViewData[@"Title"]</h2>
+
+<div class="row mt-4">
+	<div class="col-12">
+		<a href="javascript:void(0)" class="btn btn-primary" onclick="startShowSendModal()">Show modal</a>
+	</div>
+</div>
+
+@* https://dotnetthoughts.net/jquery-unobtrusive-ajax-helpers-in-aspnet-core/ *@
+<form id="sendModalForm"
+      asp-antiforgery="true"
+      asp-controller="TestDevExtreme"
+      asp-action="DxPostView03"
+      data-ajax="true"
+      data-ajax-method="post"
+      data-ajax-begin="sendForm_begin"
+      data-ajax-complete="sendForm_complete"
+      data-ajax-success="sendForm_success"
+      data-ajax-failure="sendForm_failure"
+      autocomplete="off">
+	  
+	<div class="modal fade" data-bs-backdrop="static" id="sendModal" name="sendModal" tabindex="-1" aria-labelledby="sendModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="sendModalTitle">DX Test Modal</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+				</div>
+			
+				<div class="modal-body mb-3" id="sendModalBody">
+					@using (Html.DevExtreme().ValidationGroup())
+					{
+						@Html.ValidationSummary()
+
+						<div class="form-panel">
+							<div class="form-fields-area">
+								<div class="row">
+									<div class="col-12">
+										@Html.LabelFor(m => m.Id, new { @class = @"form-label" })
+									</div>
+									<div class="col-12">
+										<div class="d-flex">
+											<div class="flex-grow-1">
+												@* https://demos.devexpress.com/ASPNetCore/Demo/DropDownBox/SingleSelection/ *@
+												@(Html.DevExtreme().DropDownBoxFor(m => m.Id)
+													//.DeferRendering(false)
+													.DropDownOptions(o => o.Container(@"sendModal")) // Notwendig wenn in Modal. https://supportcenter.devexpress.com/ticket/details/t678794
+													.ID(@"idSelectControl")
+													.DisplayExpr(new JS(@"idSelect_displayExpr"))
+													.DataSource(d => d.Mvc()
+														.Controller(nameof(DataController).Cn())
+														.LoadAction(nameof(DataController.LoadAllData01))
+														.LoadMode(DataSourceLoadMode.Raw)
+														.Key(nameof(Data01Model.Id).ToLowerInvariant()))
+													.Placeholder("Select data")
+													.OnValueChanged(@"idSelect_valueChanged")
+													.ContentTemplate(new TemplateName(@"EmbeddedIdSelect")))
+												@Html.ValidationMessageFor(m => m.Id)
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Send</button>
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+@using (Html.DevExtreme().NamedTemplate(@"EmbeddedIdSelect"))
+{
+	@(Html.DevExtreme().DataGrid()
+		.ID(@"embedded-idselect-grid")
+		.DataSource(new JS(@"component.getDataSource()"))
+		.Columns(columns =>
+		{
+			columns.Add().DataField(nameof(Data01Model.Id)).Caption("ID").Visible(false);
+			columns.Add().DataField(nameof(Data01Model.Name)).Caption("Name");
+		})
+		.HoverStateEnabled(true)
+		.Paging(p => p.PageSize(10))
+		.SearchPanel(sp=>sp.Visible(true))
+		.FilterRow(f => f.Visible(true))
+		.Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+		.Height(345)
+		.Selection(s => s.Mode(SelectionMode.Single))
+		.SelectedRowKeys(new JS(@"component.option(""value"") ? [component.option(""value"")] : []"))
+		.OnSelectionChanged(
+			@<text>
+				function(selectedItems) {
+				var keys = selectedItems.selectedRowKeys;
+				component.option("value", keys);
+				component.close();
+				}
+			 </text>)
+		)
+}
