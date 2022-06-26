@@ -99,7 +99,8 @@ public sealed class TestDevExtremeController : Controller
             {
                 error = false,
                 successful = true,
-                message = $"Received ID {model.Id}"
+                message = $"Received ID {model.Id}",
+                id = model.Id
             });
     }
 }

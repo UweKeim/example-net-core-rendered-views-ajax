@@ -6,6 +6,8 @@
 
 @section Scripts {
 	<script>
+		var _id = 39;
+
 		// --------------------------------
 
 		$(function() {
@@ -58,6 +60,7 @@
 				fillHtmlIntoContainer(data.html, cont);
 			} else {
 				hideSendModal();
+				_id = data.id; // Remember for next turn.
 				handleSuccess(data.message);
 			}
 		}
@@ -79,8 +82,8 @@
 
 			$.ajax({
 				type: "POST",
-				url: "@Url.Action(@"GetPartialView03", @"TestDevExtreme", new { id = 33 })",
-				data: { "id": 33 },
+				url: "@Url.Action(@"GetPartialView03", @"TestDevExtreme", new { id = @"_id_" })".replace('_id_', _id),
+				data: { "id": _id },
 				success: function(response) {
 					hideLoadingPanel();
 
@@ -108,7 +111,7 @@
 
 <div class="row mt-4">
 	<div class="col-12">
-		<a href="javascript:void(0)" class="btn btn-outline-primary" onclick="startShowSendModal()">Show modal</a>
+		<a href="javascript:void(0)" class="btn btn-primary" onclick="startShowSendModal()">Show modal</a>
 	</div>
 </div>
 
