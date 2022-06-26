@@ -1,0 +1,46 @@
+﻿@{
+	ViewData[@"Title"] = "DX Test 01";
+}
+
+@section Scripts {
+	<script>
+		$(function() {
+			console.log("DX Test 01: Document ready.");
+
+			showLoadingPanel($('body'), 1);
+			sleep(1000);
+
+			$.ajax({
+				type: "POST",
+				url: "@Url.Action(@"GetPartialView01", @"TestDevExtreme", new { id = 3 })",
+				data: { "id": 3 },
+				success: function(response) {
+					sleep(1000);
+					hideLoadingPanel();
+
+					if (response.error) {
+						handleError(response.error, false);
+					} else {
+						// Partial anzeigen.
+						const cont = $('#partial-view-01-container');
+						cont.html(response.html);
+						renderFormGroupsInContainer(cont);
+					}
+				},
+				error: function(response) {
+					sleep(1000);
+					hideLoadingPanel();
+					handleError(response.responseText, false);
+				}
+			});
+		});
+
+		function DxView01Func1(a) {
+			console.log(`DX View 01: DxView01Func1('${a}').`);
+		}
+	</script>
+}
+
+<h1>DX Test 01</h1>
+
+<div id="partial-view-01-container" class="mt-3"></div>

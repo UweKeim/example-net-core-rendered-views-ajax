@@ -1,0 +1,17 @@
+﻿@model int
+
+<script>
+	function DxPartialView02Func1(a) {
+		console.log(`DX Partial View 02: DxPartialView02Func1('${a}').`);
+	}
+
+	$(function() {
+		console.log("DX Partial View 02: Document ready.");
+		DxPartialView02Func1("dx-p2");
+		DxView01Func1("dx-p2");
+	});
+</script>
+
+<h3>DX Partial View 02</h3>
+
+<p>Content of the DX Partial View 02. Passed ID: <strong>@Model</strong>.</p>

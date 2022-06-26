@@ -1,12 +1,11 @@
 ﻿namespace VrseWebApplication.Controllers;
 
 using Code;
-using Microsoft.AspNetCore.Mvc;
 using Models;
 
 public sealed class TestController : Controller
 {
-    private readonly ILogger<TestController> _logger;
+    private readonly ILogger _logger;
     private readonly IViewRenderService _viewRenderer;
 
     public TestController(

@@ -1,12 +1,10 @@
 ﻿namespace VrseWebApplication.Controllers;
 
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using Models;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger _logger;
 
     public HomeController(ILogger<HomeController> logger)
     {
@@ -14,11 +12,6 @@ public class HomeController : Controller
     }
 
     public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Privacy()
     {
         return View();
     }
