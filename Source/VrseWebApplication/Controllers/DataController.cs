@@ -12,23 +12,23 @@ public sealed class DataController : Controller
         {
             new()
             {
-                Id = 1,
-                Name = "Anton"
+                id = 1,
+                name = "Anton"
             },
             new()
             {
-                Id = 2,
-                Name = "Berta"
+                id = 2,
+                name = "Berta"
             },
             new()
             {
-                Id = 3,
-                Name = "Cäsar"
+                id = 3,
+                name = "Cäsar"
             },
             new()
             {
-                Id = 4,
-                Name = "Dora"
+                id = 4,
+                name = "Dora"
             },
         };
 

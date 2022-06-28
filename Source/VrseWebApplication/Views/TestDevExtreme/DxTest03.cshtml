@@ -15,7 +15,14 @@
 		$(function() {
 			console.log("DX Test 03: Document ready.");
 
-			DevExpress.ui.dxOverlay.baseZIndex(2000);
+			const $dd = $("#idSelectControl");
+			if ($dd) {
+				// Das machen, um einen ggf. schon gefüllten Wert auszuwählen.
+				const dd = $dd.dxDropDownBox('instance');
+				if (dd) dd._createPopup();
+			}
+
+			//DevExpress.ui.dxOverlay.baseZIndex(2000);
 		});
 
 		// --------------------------------
@@ -90,7 +97,7 @@
 		}
 
 		function idSelect_displayExpr(item) {
-			return item && `${item.@nameof(Data01Model.Name)}`;
+			return item && `${item.@nameof(Data01Model.name)}`;
 		}
 	</script>
 }
@@ -115,7 +122,7 @@
       data-ajax-success="sendForm_success"
       data-ajax-failure="sendForm_failure"
       autocomplete="off">
-	  
+
 	<div class="modal fade" data-bs-backdrop="static" id="sendModal" name="sendModal" tabindex="-1" aria-labelledby="sendModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
@@ -123,7 +130,7 @@
 					<h5 class="modal-title" id="sendModalTitle">DX Test Modal</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
 				</div>
-			
+
 				<div class="modal-body mb-3" id="sendModalBody">
 					@using (Html.DevExtreme().ValidationGroup())
 					{
@@ -141,14 +148,16 @@
 												@* https://demos.devexpress.com/ASPNetCore/Demo/DropDownBox/SingleSelection/ *@
 												@(Html.DevExtreme().DropDownBoxFor(m => m.Id)
 													//.DeferRendering(false)
-													.DropDownOptions(o => o.Height(350).Container(@"sendModal")) // Notwendig wenn in Modal. https://supportcenter.devexpress.com/ticket/details/t678794
+													.DropDownOptions(o => o.Height(350).Container(@"#sendModal")) // Notwendig wenn in Modal. https://supportcenter.devexpress.com/ticket/details/t678794
 													.ID(@"idSelectControl")
+													.ValueExpr(nameof(Data01Model.id))
 													.DisplayExpr(new JS(@"idSelect_displayExpr"))
+													.ElementAttr(@"data-grid", @"embedded-idselect-grid")
 													.DataSource(d => d.Mvc()
 														.Controller(nameof(DataController).Cn())
 														.LoadAction(nameof(DataController.LoadAllData01))
 														.LoadMode(DataSourceLoadMode.Raw)
-														.Key(nameof(Data01Model.Id).ToLowerInvariant()))
+														.Key(nameof(Data01Model.id)))
 													.Placeholder("Select data")
 													.OnValueChanged(@"idSelect_valueChanged")
 													.ContentTemplate(new TemplateName(@"EmbeddedIdSelect")))
@@ -178,12 +187,12 @@
 		.DataSource(new JS(@"component.getDataSource()"))
 		.Columns(columns =>
 		{
-			columns.Add().DataField(nameof(Data01Model.Id)).Caption("ID").Visible(false);
-			columns.Add().DataField(nameof(Data01Model.Name)).Caption("Name");
+			columns.Add().DataField(nameof(Data01Model.id)).Caption("ID").Visible(false);
+			columns.Add().DataField(nameof(Data01Model.name)).Caption("Name");
 		})
 		.HoverStateEnabled(true)
 		.Paging(p => p.PageSize(10))
-		.SearchPanel(sp=>sp.Visible(true))
+		.SearchPanel(sp => sp.Visible(true))
 		.FilterRow(f => f.Visible(true))
 		.Scrolling(s => s.Mode(GridScrollingMode.Virtual))
 		.Height(345)

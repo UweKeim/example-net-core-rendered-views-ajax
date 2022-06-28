@@ -14,7 +14,7 @@
 	}
 
 	function idSelect_displayExpr(item) {
-		return item && `${item.@nameof(Data01Model.Name)}`;
+		return item && `${item.@nameof(Data01Model.name)}`;
 	}
 </script>
 
@@ -41,7 +41,7 @@
 									.Controller(nameof(DataController).Cn())
 									.LoadAction(nameof(DataController.LoadAllData01))
 									.LoadMode(DataSourceLoadMode.Raw)
-									.Key(nameof(Data01Model.Id).ToLowerInvariant()))
+									.Key(nameof(Data01Model.id).ToLowerInvariant()))
 								.Placeholder("Select data")
 								.OnValueChanged(@"idSelect_valueChanged")
 								.ContentTemplate(new TemplateName(@"EmbeddedIdSelect")))
@@ -61,8 +61,8 @@
 		.DataSource(new JS(@"component.getDataSource()"))
 		.Columns(columns =>
 		{
-			columns.Add().DataField(nameof(Data01Model.Id)).Caption("ID").Visible(false);
-			columns.Add().DataField(nameof(Data01Model.Name)).Caption("Name");
+			columns.Add().DataField(nameof(Data01Model.id)).Caption("ID").Visible(false);
+			columns.Add().DataField(nameof(Data01Model.name)).Caption("Name");
 		})
 		.HoverStateEnabled(true)
 		.Paging(p => p.PageSize(10))
