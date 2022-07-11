@@ -1,5 +1,5 @@
 /*!
-* sweetalert2 v11.4.18
+* sweetalert2 v11.4.20
 * Released under the MIT License.
 */
 (function (global, factory) {
@@ -89,7 +89,6 @@
   const hasToPromiseFn = arg => arg && typeof arg.toPromise === 'function';
   const asPromise = arg => hasToPromiseFn(arg) ? arg.toPromise() : Promise.resolve(arg);
   const isPromise = arg => arg && Promise.resolve(arg) === arg;
-  const getRandomElement = arr => arr[Math.floor(Math.random() * arr.length)];
 
   const defaultParams = {
     title: '',
@@ -874,57 +873,6 @@
     setupAccessibility(params);
     setupRTL(targetElement);
     addInputChangeListeners();
-    noWarMessageForRussians(container, params);
-  };
-  /**
-   * @param {HTMLElement} container
-   * @param {SweetAlertOptions} params
-   */
-
-  const noWarMessageForRussians = (container, params) => {
-    if (params.toast) {
-      return;
-    } // This message is targeted at people who are corrupted by propaganda, everybody else
-    // is already against war either silently or actively.
-    //
-    // The point is to wrap the truth-bomb into a patriotic title so they will actually click it
-    // and listen to the uncomfortable truth about the war from the people they love or respect.
-
-
-    const message = getRandomElement([{
-      text: 'ШВАРЦЕНЕГГЕР обратился <br> к РУССКОМУ НАРОДУ о войне',
-      // Arnold is loved in Russia by all people including those who are for this war
-      // His speech might change the mind of those who are brainwashed by propaganda
-      youtubeId: 'fWClXZd9c78'
-    }, {
-      text: 'РУССКИЙ ПАТРИОТ <br> открыл главную тайну спецоперации',
-      // In this video one of the most famous Russian nationalist leaders, Dmitry Demushkin,
-      // explains that this war has no sense and produces the exact opposite result of what
-      // it was intended to do.
-      youtubeId: '_RjBNkn88yA'
-    }, {
-      text: 'ГЕРОЙ НОВОРОССИИ СТРЕЛКОВ <br> дал оценку ходу спецоперации',
-      // In this video Igor Girkin, who played a key role in the annexation of Crimea,
-      // explains that this war has failed already and all possible outcomes are bad for Russia.
-      youtubeId: 'yUmzQT4C8JY'
-    }, {
-      text: 'ФИНСКИЙ ДРУГ РОССИИ <br> говорит ПО-РУССКИ о спецоперации',
-      youtubeId: 'hkCYb6edUrQ'
-    }, {
-      text: 'ЮРИЙ ПОДОЛЯКА честно <br> о генералах РУССКОЙ АРМИИ',
-      youtubeId: 'w4-_8BJKfpk'
-    }, {
-      text: 'Полковник ФСБ СТРЕЛКОВ <br> об успехах РОССИИ в спецоперации',
-      youtubeId: 'saK5UTKroDA'
-    }]); // The message will only be shown to Russian users visiting Russian sites
-
-    if (/^ru\b/.test(navigator.language) && location.host.match(/\.(ru|su|xn--p1ai)$/)) {
-      const noWar = document.createElement('div');
-      noWar.className = swalClasses['no-war'];
-      setInnerHtml(noWar, "<a href=\"https://www.youtube.com/watch?v=".concat(message.youtubeId, "\" target=\"_blank\">").concat(message.text, "</a>"));
-      container.appendChild(noWar);
-      container.style.paddingTop = '4em';
-    }
   };
 
   /**
@@ -3943,7 +3891,27 @@
     if (document.activeElement instanceof HTMLElement && typeof document.activeElement.blur === 'function') {
       document.activeElement.blur();
     }
-  }; // Assign instance methods from src/instanceMethods/*.js to prototype
+  }; // This anti-war message will only be shown to Russian users visiting Russian sites
+
+
+  if (typeof window !== 'undefined' && /^ru\b/.test(navigator.language) && location.host.match(/\.(ru|su|xn--p1ai)$/)) {
+    if (Math.random() < 0.1) {
+      const noWar = document.createElement('div');
+      noWar.className = 'leave-russia-now-and-apply-your-skills-to-the-world';
+      setInnerHtml(noWar, "\n      <div>\n        \u0415\u0441\u043B\u0438 \u043C\u044B \u043D\u0435 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u043C \u0432\u043E\u0439\u043D\u0443, \u043E\u043D\u0430 \u043F\u0440\u0438\u0434\u0435\u0442 \u0432 \u0434\u043E\u043C <strong>\u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0438\u0437 \u043D\u0430\u0441</strong> \u0438 \u0435\u0451 \u043F\u043E\u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u044F \u0431\u0443\u0434\u0443\u0442 <strong>\u0443\u0436\u0430\u0441\u0430\u044E\u0449\u0438\u043C\u0438</strong>.\n      </div>\n      <div>\n        \u041F\u0443\u0442\u0438\u043D\u0441\u043A\u0438\u0439 \u0440\u0435\u0436\u0438\u043C \u0437\u0430 20 \u0441 \u043B\u0438\u0448\u043D\u0438\u043C \u043B\u0435\u0442 \u0441\u0432\u043E\u0435\u0433\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0434\u043E\u043B\u0431\u0438\u043B \u043D\u0430\u043C, \u0447\u0442\u043E \u043C\u044B \u0431\u0435\u0441\u0441\u0438\u043B\u044C\u043D\u044B \u0438 \u043E\u0434\u0438\u043D \u0447\u0435\u043B\u043E\u0432\u0435\u043A \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u043D\u0438\u0447\u0435\u0433\u043E \u0441\u0434\u0435\u043B\u0430\u0442\u044C. <strong>\u042D\u0442\u043E \u043D\u0435 \u0442\u0430\u043A!</strong>\n      </div>\n      <div>\n        \u0412 \u043D\u0438\u0436\u0435\u043F\u0440\u0438\u0432\u0435\u0434\u0451\u043D\u043D\u043E\u043C \u0432\u0438\u0434\u0435\u043E \u043E\u0431\u044A\u044F\u0441\u043D\u044F\u0435\u0442\u0441\u044F \u043A\u0430\u043A \u043A\u0430\u0436\u0434\u044B\u0439 \u0438\u0437 \u043D\u0430\u0441 \u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u043C\u043E\u0447\u044C \u0432 \u0442\u043E\u043C, <strong>\u0447\u0442\u043E\u0431\u044B \u044D\u0442\u0430 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u0430\u044F \u0438 \u0431\u0435\u0441\u0447\u0435\u043B\u043E\u0432\u0435\u0447\u043D\u0430\u044F \u0432\u043E\u0439\u043D\u0430 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u043B\u0430\u0441\u044C</strong>:\n      </div>\n      <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/4CfDhaRkw7I\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>\n      <div>\n        \u041D\u0435\u0442 \u0432\u043E\u0439\u043D\u0435!\n      </div>\n      ");
+      const closeButton = document.createElement('button');
+      closeButton.innerHTML = '&times;';
+
+      closeButton.onclick = () => noWar.remove();
+
+      noWar.appendChild(closeButton);
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          document.body.appendChild(noWar);
+        }, 1000);
+      });
+    }
+  } // Assign instance methods from src/instanceMethods/*.js to prototype
 
 
   Object.assign(SweetAlert.prototype, instanceMethods); // Assign static methods from src/staticMethods/*.js to constructor
@@ -3958,7 +3926,7 @@
     };
   });
   SweetAlert.DismissReason = DismissReason;
-  SweetAlert.version = '11.4.18';
+  SweetAlert.version = '11.4.20';
 
   const Swal = SweetAlert; // @ts-ignore
 

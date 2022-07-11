@@ -1,5 +1,5 @@
 /**
- * Dark Reader v4.9.51
+ * Dark Reader v4.9.52
  * https://darkreader.org/
  */
 
@@ -928,7 +928,7 @@
     var cssURLRegex = /url\((('.+?')|(".+?")|([^\)]*?))\)/g;
     var cssImportRegex = /@import\s*(url\()?(('.+?')|(".+?")|([^\)]*?))\)? ?(screen)?;?/gi;
     function getCSSURLValue(cssURL) {
-        return cssURL.trim().replace(/^url\((.*)\)$/, '$1').trim().replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1');
+        return cssURL.trim().replace(/^url\((.*)\)$/, '$1').trim().replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1').replace(/(?:\\(.))/g, '$1');
     }
     function getCSSBaseBath(url) {
         var cssURL = parseURL(url);
@@ -2367,7 +2367,7 @@
     function getModifiedFallbackStyle(filter, _a) {
         var strict = _a.strict;
         var lines = [];
-        var isMicrosoft = location.hostname.endsWith('microsoft.com');
+        var isMicrosoft = ['microsoft.com', 'docs.microsoft.com'].includes(location.hostname);
         lines.push("html, body, ".concat(strict ? "body :not(iframe)".concat(isMicrosoft ? ':not(div[style^="position:absolute;top:0;left:-"]' : '') : 'body > :not(iframe)', " {"));
         lines.push("    background-color: ".concat(modifyBackgroundColor({ r: 255, g: 255, b: 255 }, filter), " !important;"));
         lines.push("    border-color: ".concat(modifyBorderColor({ r: 64, g: 64, b: 64 }, filter), " !important;"));
@@ -3912,6 +3912,19 @@
     }
 
     var STYLE_SELECTOR = 'style, link[rel*="stylesheet" i]:not([disabled])';
+    function isFontsGoogleApiStyle(element) {
+        if (!element.href) {
+            return false;
+        }
+        try {
+            var elementURL = new URL(element.href);
+            return elementURL.hostname === 'fonts.googleapis.com';
+        }
+        catch (err) {
+            logInfo("Couldn't construct ".concat(element.href, " as URL"));
+            return false;
+        }
+    }
     function shouldManageStyle(element) {
         return (((element instanceof HTMLStyleElement) ||
             (element instanceof SVGStyleElement) ||
@@ -3920,7 +3933,7 @@
                 element.rel.toLowerCase().includes('stylesheet') &&
                 !element.disabled &&
                 (isFirefox ? !element.href.startsWith('moz-extension://') : true) &&
-                !element.href.startsWith('https://fonts.googleapis.com'))) &&
+                !isFontsGoogleApiStyle(element))) &&
             !element.classList.contains('darkreader') &&
             element.media.toLowerCase() !== 'print' &&
             !element.classList.contains('stylus'));
@@ -4786,7 +4799,18 @@
         var removeRuleDescriptor = Object.getOwnPropertyDescriptor(CSSStyleSheet.prototype, 'removeRule');
         var documentStyleSheetsDescriptor = enableStyleSheetsProxy ?
             Object.getOwnPropertyDescriptor(Document.prototype, 'styleSheets') : null;
-        var shouldWrapHTMLElement = location.hostname.endsWith('baidu.com');
+        var shouldWrapHTMLElement = [
+            'baidu.com',
+            'baike.baidu.com',
+            'ditu.baidu.com',
+            'map.baidu.com',
+            'maps.baidu.com',
+            'haokan.baidu.com',
+            'pan.baidu.com',
+            'passport.baidu.com',
+            'tieba.baidu.com',
+            'www.baidu.com'
+        ].includes(location.hostname);
         var getElementsByTagNameDescriptor = shouldWrapHTMLElement ?
             Object.getOwnPropertyDescriptor(Element.prototype, 'getElementsByTagName') : null;
         var cleanUp = function () {
