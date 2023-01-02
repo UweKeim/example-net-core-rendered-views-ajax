@@ -23,6 +23,12 @@ dotnet tool install --global dotnet-outdated-tool
 @REM Das ist von Zeit zu Zeit notwendig, deshalb hier gleich automatisch.
 dotnet dev-certs https --trust
 
+@REM Aufräumen, falls schon "node_modules" und/oder "package-lock.json" vorhanden
+@REM sind, kann es zu Fehlern im Gulpfile.js geben, siehe auch:
+@REM https://github.com/microsoft/TypeScript/issues/51420#issuecomment-1368970292
+del "%~dp0\Source\package-lock.json" /Q
+rmdir "%~dp0\Source\node_modules" /Q /S
+
 @REM um für "gulpfile.js" und den Task Runner Explorer alles bereit zu haben.
 cd "%~dp0\Source"
 call npm install

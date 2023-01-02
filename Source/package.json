@@ -56,7 +56,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
-    "update": "ncu -u && npm install --save-dev"
+    "update": "ncu -u --filterVersion \"^*\" && npm install --save-dev"
   },
   "dependencies": {
     "codemirror": "^6.0.1"
