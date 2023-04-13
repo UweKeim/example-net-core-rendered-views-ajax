@@ -19,6 +19,7 @@ call npm install --global npm-check-updates
 @REM .NET SDK installiert sein. Dann prfen, ob Visual Studio korrekt
 @REM und vollstndig installiert ist.
 dotnet tool install --global dotnet-outdated-tool
+dotnet tool update --global dotnet-outdated-tool
 
 @REM Das ist von Zeit zu Zeit notwendig, deshalb hier gleich automatisch.
 dotnet dev-certs https --trust
